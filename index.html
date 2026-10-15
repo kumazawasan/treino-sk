@@ -1,0 +1,280 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plano de Treino Sabrina v1.3</title>
+<style>
+:root{--bg:#0f1115;--card:#181b22;--card2:#20242d;--tx:#e8eaf0;--mu:#9aa3b2;--ac:#e0559a;--ac2:#7c5cff;--ok:#33c48d;--wa:#f2b84b;--bd:#2a2f3a}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--tx);line-height:1.45}
+header{padding:20px 16px 8px;max-width:980px;margin:auto}h1{margin:0;font-size:1.5rem}h1 span{color:var(--ac)}.sub{color:var(--mu);font-size:.9rem}
+main{max-width:980px;margin:auto;padding:0 12px 80px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:5}
+.tab{border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:8px 12px;border-radius:999px;cursor:pointer;font-size:.9rem}
+.tab.on{background:linear-gradient(90deg,var(--ac),var(--ac2));border-color:transparent;font-weight:600}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin:10px 0}
+.alert{border-left:4px solid var(--wa);background:#2a2416}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{display:inline-block;background:var(--card2);border:1px solid var(--bd);border-radius:8px;padding:2px 8px;font-size:.8rem;margin:2px 4px 2px 0}
+.pill.ac{border-color:var(--ac);color:#ffb3d6}.ex h3{margin:0 0 4px;font-size:1.05rem}.ss{border-left:4px solid var(--ac2)}
+.note{color:var(--mu);font-size:.85rem;margin-top:6px}select,input{background:var(--card2);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:6px}
+table{width:100%;border-collapse:collapse;margin-top:8px}td,th{padding:4px;text-align:center;font-size:.85rem;border-bottom:1px solid var(--bd)}td input[type=number]{width:70px}
+button{background:var(--card2);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;cursor:pointer}button.pri{background:var(--ac);border-color:var(--ac);font-weight:600}
+.bar{height:14px;background:var(--card2);border-radius:7px;position:relative;overflow:hidden;flex:1;min-width:120px}.bar i{position:absolute;top:0;bottom:0;background:linear-gradient(90deg,var(--ac),var(--ac2))}.bar b{position:absolute;top:0;bottom:0;border-left:2px dashed var(--ok);border-right:2px dashed var(--ok);background:rgba(51,196,141,.08)}
+.vrow{display:flex;gap:10px;align-items:center;margin:6px 0}.vrow .lab{width:140px;font-size:.9rem}.vrow .n{width:110px;text-align:right;font-size:.85rem;color:var(--mu)}
+#timer{position:fixed;bottom:12px;right:12px;background:var(--ac2);color:#fff;padding:12px 16px;border-radius:14px;font-size:1.4rem;font-weight:700;display:none;box-shadow:0 6px 20px #0008;cursor:pointer}
+.grid7{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.d7{background:var(--card2);border-radius:10px;padding:8px;text-align:center;font-size:.8rem;min-height:70px}.d7 b{display:block;margin-bottom:4px}
+.d7.f{border:1px solid var(--ac)}.d7.c{border:1px solid var(--ok)}a{color:#9fb4ff}.done{opacity:.55}ul{padding-left:20px}li{margin:4px 0}
+.prog{height:8px;background:var(--card2);border-radius:4px;overflow:hidden}.prog i{display:block;height:100%;background:var(--ok)}
+@media(max-width:600px){.grid7{grid-template-columns:repeat(4,1fr)}.vrow .lab{width:100px}}
+</style></head><body>
+<header><h1>Plano de Treino <span>Sabrina</span> v1.3</h1>
+<div class="sub">Hipertrofia · 3 dias/semana · ~60 min · ênfase em inferiores com superiores completos · pilates Seg/Qua/Sex · cardio em janela separada · gerado em 15/10/2026</div></header>
+<main>
+<div class="card alert"><b>Antes de começar</b><ul>
+<li><b>Hidratação:</b> levar garrafa de água para todos os treinos e para o pilates.</li>
+<li><b>Não treinar em jejum longo:</b> fazer uma refeição com proteína 1–3 h antes. Meta de proteína de referência: ~1,6 g/kg/dia (Morton 2018), ajustar com nutricionista.</li>
+<li>O plano assume nível intermediário. Se estiver voltando a treinar agora, usar a <b>Semana 1 (adaptação)</b> por 2 semanas.</li></ul></div>
+
+<div class="card row" id="ctrl" style="display:none"><label>Semana do bloco:
+<select id="week"></select></label><span id="weekInfo" class="note"></span>
+<span style="flex:1"></span><button onclick="exportLog()">Exportar registros</button><button onclick="resetWeek()">Limpar semana</button></div>
+
+<div class="tabs" id="tabs"></div><div id="view"></div><div id="static"><div class="card note"><b>Versão de leitura.</b> Este aparelho abriu o arquivo sem executar JavaScript (pré-visualização do iPhone/Telegram). O plano completo está abaixo, com séries e RIR da ficha base. Semana 1 (adaptação): somar 1 ao RIR. Semana 5 (deload): metade das séries. Registro de cargas, cronômetro e seletor de semana só funcionam abrindo no navegador.</div><div class="tabs" style="position:static"><a class="tab" href="#s_A" style="text-decoration:none">Dia A · Terça</a><a class="tab" href="#s_B" style="text-decoration:none">Dia B · Quinta</a><a class="tab" href="#s_C" style="text-decoration:none">Dia C · Sábado</a><a class="tab" href="#s_vol" style="text-decoration:none">Volume</a><a class="tab" href="#s_cardio" style="text-decoration:none">Cardio e pilates</a><a class="tab" href="#s_regras" style="text-decoration:none">Progressão</a><a class="tab" href="#s_sig" style="text-decoration:none">Siglas</a><a class="tab" href="#s_ev" style="text-decoration:none">Evidências</a></div><section id="s_A"><h2 style="margin:24px 0 6px;color:var(--ac)">Dia A · Terça</h2><div class="card"><h2 style="margin:0">Dia A · Glúteo &amp; Quadríceps + Empurrar</h2><div class="note">Terça · tempo estimado 59 min (inclui 8 min de aquecimento geral + séries de aproximação). RIR da ficha. Dupla progressão: bateu o teto de reps em todas as séries, sobe carga.</div>
+ </div>
+ <div class="card note"><b>Aquecimento (8 min):</b> 5 min de bike/esteira leve + mobilidade de quadril e ombro. No 1º exercício: 2–3 séries de aproximação (50%·70%·85% da carga) que não contam como série de trabalho.</div><div class="card ex "><h3>Agachamento livre</h3>
+ <div><span class="pill ac">3 × 6–10</span><span class="pill">RIR 2–3</span><span class="pill">descanso 150s</span><span class="pill">Quadríceps</span><span class="pill">Glúteos</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Hack machine · Agachamento no Smith · Agachamento goblet (fase de adaptação)</div></div>
+ <div class="note">Profundidade máxima com coluna neutra. Plotkin 2023: agachamento cresce glúteo tanto quanto hip thrust e ainda mais coxa.</div>
+ </div><div class="card ex "><h3>Hip thrust com barra</h3>
+ <div><span class="pill ac">3 × 8–12</span><span class="pill">RIR 1–2</span><span class="pill">descanso 120s</span><span class="pill">Glúteos</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Hip thrust na máquina · Glute bridge no Smith</div></div>
+ <div class="note">Pausa de 1 s no topo, queixo para dentro, canela vertical no topo.</div>
+ </div><div class="card ex "><h3>Afundo búlgaro (halteres)</h3>
+ <div><span class="pill ac">2 × 8–12/perna</span><span class="pill">RIR 1–2</span><span class="pill">descanso 60s</span><span class="pill">Quadríceps</span><span class="pill">Glúteos</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Afundo reverso no Smith · Passada andando</div></div>
+ <div class="note">Tronco levemente inclinado à frente = mais glúteo. Descanso só após as duas pernas.</div>
+ </div><div class="card ex "><h3>Cadeira extensora</h3>
+ <div><span class="pill ac">2 × 10–15</span><span class="pill">RIR 0–1</span><span class="pill">descanso 75s</span><span class="pill">Quadríceps</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Sissy squat assistido</div></div>
+ <div class="note">Encosto reclinado ao máximo (reto femoral alongado). Última série pode ter drop set.</div>
+ </div><div class="card ex "><h3>Supino inclinado com halteres</h3>
+ <div><span class="pill ac">3 × 8–12</span><span class="pill">RIR 1–2</span><span class="pill">descanso 120s</span><span class="pill">Peito</span><span class="pill">Tríceps ½</span><span class="pill">Ombros ½</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Supino inclinado máquina · Supino reto halteres</div></div>
+ <div class="note">Banco a 30°. Descer até alongar o peito.</div>
+ </div><div class="card ex ss"><h3>Elevação lateral (halter ou polia)</h3>
+ <div><span class="pill ac">2 × 12–20</span><span class="pill">RIR 0–1</span><span class="pill">→ direto p/ o próximo (superset)</span><span class="pill">Ombros</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Elevação lateral máquina</div></div>
+ <div class="note">Superset com o próximo. Sem balanço.</div>
+ </div><div class="card ex ss"><h3>Tríceps francês na polia (overhead)</h3>
+ <div><span class="pill ac">2 × 10–15</span><span class="pill">RIR 0–1</span><span class="pill">descanso 60s</span><span class="pill">Tríceps</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Tríceps francês com halter</div></div>
+ <div class="note">Maeo 2023: overhead gerou ~1,4x mais hipertrofia de tríceps que pushdown.</div>
+ </div><div class="card ex "><h3>(Opcional) Panturrilha no leg press (parcial alongada)</h3>
+ <div><span class="pill ac">2 × 15–20</span><span class="pill">RIR 0–1</span><span class="pill">descanso 45s</span><span class="pill">Panturrilha</span></div>
+ 
+ <div class="note">Opcional se sobrar tempo. Kassiano 2023 (mulheres): parcial na porção alongada &gt; amplitude completa.</div>
+ </div></section><section id="s_B"><h2 style="margin:24px 0 6px;color:var(--ac)">Dia B · Quinta</h2><div class="card"><h2 style="margin:0">Dia B · Superior completo + Posterior de coxa</h2><div class="note">Quinta · tempo estimado 60 min (inclui 8 min de aquecimento geral + séries de aproximação). RIR da ficha. Dupla progressão: bateu o teto de reps em todas as séries, sobe carga.</div>
+ </div>
+ <div class="card note"><b>Aquecimento (8 min):</b> 5 min de bike/esteira leve + mobilidade de quadril e ombro. No 1º exercício: 2–3 séries de aproximação (50%·70%·85% da carga) que não contam como série de trabalho.</div><div class="card ex "><h3>Stiff / Levantamento terra romeno</h3>
+ <div><span class="pill ac">3 × 6–10</span><span class="pill">RIR 2</span><span class="pill">descanso 150s</span><span class="pill">Posterior de coxa</span><span class="pill">Glúteos ½</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Stiff com halteres · Good morning no Smith</div></div>
+ <div class="note">Quadril para trás, barra rente à perna, até sentir alongar o posterior sem arredondar a lombar.</div>
+ </div><div class="card ex "><h3>Puxada frente (pegada neutra ou aberta)</h3>
+ <div><span class="pill ac">3 × 8–12</span><span class="pill">RIR 1–2</span><span class="pill">descanso 120s</span><span class="pill">Costas</span><span class="pill">Bíceps ½</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Barra fixa assistida · Puxada unilateral na polia</div></div>
+ <div class="note">Puxar com o cotovelo, peito em direção à barra.</div>
+ </div><div class="card ex "><h3>Remada apoiada no peito</h3>
+ <div><span class="pill ac">3 × 8–12</span><span class="pill">RIR 1–2</span><span class="pill">descanso 120s</span><span class="pill">Costas</span><span class="pill">Bíceps ½</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Remada máquina · Remada baixa no cabo</div></div>
+ <div class="note">Apoio no peito tira carga da lombar (já trabalhada no stiff).</div>
+ </div><div class="card ex "><h3>Desenvolvimento com halteres sentada</h3>
+ <div><span class="pill ac">2 × 8–12</span><span class="pill">RIR 1–2</span><span class="pill">descanso 90s</span><span class="pill">Ombros ½</span><span class="pill">Tríceps ½</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Desenvolvimento máquina</div></div>
+ <div class="note">Banco a 80–85°, sem travar no topo.</div>
+ </div><div class="card ex "><h3>Cadeira flexora (sentada)</h3>
+ <div><span class="pill ac">3 × 10–15</span><span class="pill">RIR 0–1</span><span class="pill">descanso 75s</span><span class="pill">Posterior de coxa</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Mesa flexora (deitada)</div></div>
+ <div class="note">Maeo 2021: flexora SENTADA deu mais hipertrofia de posterior que a deitada (quadril flexionado = músculo alongado).</div>
+ </div><div class="card ex ss"><h3>Elevação lateral na polia</h3>
+ <div><span class="pill ac">2 × 15–20</span><span class="pill">RIR 0–1</span><span class="pill">→ direto p/ o próximo (superset)</span><span class="pill">Ombros</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Elevação lateral halter</div></div>
+ <div class="note">Superset com o próximo.</div>
+ </div><div class="card ex ss"><h3>Rosca inclinada com halteres</h3>
+ <div><span class="pill ac">2 × 10–15</span><span class="pill">RIR 0–1</span><span class="pill">descanso 60s</span><span class="pill">Bíceps</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Rosca bayesiana na polia</div></div>
+ <div class="note">Braço atrás do tronco = bíceps alongado.</div>
+ </div></section><section id="s_C"><h2 style="margin:24px 0 6px;color:var(--ac)">Dia C · Sábado</h2><div class="card"><h2 style="margin:0">Dia C · Glúteo &amp; Posterior + Puxar</h2><div class="note">Sábado · tempo estimado 55 min (inclui 8 min de aquecimento geral + séries de aproximação). RIR da ficha. Dupla progressão: bateu o teto de reps em todas as séries, sobe carga.</div>
+ </div>
+ <div class="card note"><b>Aquecimento (8 min):</b> 5 min de bike/esteira leve + mobilidade de quadril e ombro. No 1º exercício: 2–3 séries de aproximação (50%·70%·85% da carga) que não contam como série de trabalho.</div><div class="card ex "><h3>Leg press 45° (pés altos e afastados)</h3>
+ <div><span class="pill ac">3 × 8–12</span><span class="pill">RIR 1–2</span><span class="pill">descanso 120s</span><span class="pill">Quadríceps</span><span class="pill">Glúteos ½</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Agachamento hack · Pêndulo</div></div>
+ <div class="note">Pés altos aumentam flexão de quadril = mais glúteo. Descer até o limite sem tirar o quadril do banco.</div>
+ </div><div class="card ex "><h3>Hip thrust (ou glute bridge máquina)</h3>
+ <div><span class="pill ac">3 × 10–15</span><span class="pill">RIR 1</span><span class="pill">descanso 90s</span><span class="pill">Glúteos</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Elevação pélvica unilateral · Extensão de quadril no cabo</div></div>
+ <div class="note">Carga um pouco menor que no Dia A, mais repetições.</div>
+ </div><div class="card ex "><h3>Cadeira flexora (sentada)</h3>
+ <div><span class="pill ac">2 × 10–15</span><span class="pill">RIR 0–1</span><span class="pill">descanso 75s</span><span class="pill">Posterior de coxa</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Flexora unilateral</div></div>
+ <div class="note">Fase excêntrica de 3 s.</div>
+ </div><div class="card ex "><h3>Cadeira abdutora</h3>
+ <div><span class="pill ac">2 × 15–25</span><span class="pill">RIR 0–1</span><span class="pill">descanso 60s</span><span class="pill">Glúteos</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Abdução no cabo · Abdução deitada com caneleira</div></div>
+ <div class="note">Tronco inclinado à frente para pegar mais glúteo médio/superior.</div>
+ </div><div class="card ex "><h3>Extensão de quadril 45° (ênfase glúteo)</h3>
+ <div><span class="pill ac">2 × 12–15</span><span class="pill">RIR 0–1</span><span class="pill">descanso 60s</span><span class="pill">Glúteos</span><span class="pill">Posterior de coxa ½</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Hiperextensão reversa · Pull-through no cabo</div></div>
+ <div class="note">Pés abertos e rodados para fora, coluna arredondada levemente no alto (tira a lombar, põe glúteo).</div>
+ </div><div class="card ex "><h3>Remada unilateral com halter</h3>
+ <div><span class="pill ac">3 × 8–12/lado</span><span class="pill">RIR 1–2</span><span class="pill">descanso 60s</span><span class="pill">Costas</span><span class="pill">Bíceps ½</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Remada unilateral máquina · Remada baixa no cabo</div></div>
+ <div class="note">Alternar os lados sem pausa; descanso após os dois.</div>
+ </div><div class="card ex "><h3>Supino máquina (ou flexão de braço)</h3>
+ <div><span class="pill ac">2 × 8–12</span><span class="pill">RIR 1–2</span><span class="pill">descanso 90s</span><span class="pill">Peito</span><span class="pill">Tríceps ½</span></div>
+ <div style="margin-top:6px"><div class="note">Alternativas: Crucifixo máquina · Flexão com joelhos</div></div>
+ 
+ </div><div class="card ex "><h3>(Opcional) Panturrilha sentada ou em pé (parcial alongada)</h3>
+ <div><span class="pill ac">2 × 15–20</span><span class="pill">RIR 0–1</span><span class="pill">descanso 45s</span><span class="pill">Panturrilha</span></div>
+ 
+ <div class="note">Opcional se sobrar tempo.</div>
+ </div></section><section id="s_vol"><h2 style="margin:24px 0 6px;color:var(--ac)">Volume</h2><div class="card"><h2 style="margin:0 0 4px">Volume semanal (séries fracionadas)</h2><div class="note">Contagem fracionada (Pelland et al., Sports Med 2026): série direta = 1, músculo secundário = ½. Faixa verde = alvo para intermediária. Calculado ao vivo a partir da ficha e da semana selecionada.</div><div class="vrow"><div class="lab">Glúteos</div><div class="bar"><b style="left:58.333333333333336%;width:25%"></b><i style="width:75%"></i></div><div class="n">18 (14–20)</div></div><div class="vrow"><div class="lab">Quadríceps</div><div class="bar"><b style="left:37.5%;width:20.833333333333336%"></b><i style="width:41.66666666666667%"></i></div><div class="n">10 (9–14)</div></div><div class="vrow"><div class="lab">Posterior de coxa</div><div class="bar"><b style="left:33.33333333333333%;width:16.666666666666664%"></b><i style="width:37.5%"></i></div><div class="n">9 (8–12)</div></div><div class="vrow"><div class="lab">Costas</div><div class="bar"><b style="left:33.33333333333333%;width:16.666666666666664%"></b><i style="width:37.5%"></i></div><div class="n">9 (8–12)</div></div><div class="vrow"><div class="lab">Peito</div><div class="bar"><b style="left:20.833333333333336%;width:16.666666666666664%"></b><i style="width:20.833333333333336%"></i></div><div class="n">5 (5–9)</div></div><div class="vrow"><div class="lab">Ombros</div><div class="bar"><b style="left:25%;width:16.666666666666664%"></b><i style="width:27.083333333333332%"></i></div><div class="n">6.5 (6–10)</div></div><div class="vrow"><div class="lab">Bíceps</div><div class="bar"><b style="left:20.833333333333336%;width:16.666666666666664%"></b><i style="width:27.083333333333332%"></i></div><div class="n">6.5 (5–9)</div></div><div class="vrow"><div class="lab">Tríceps</div><div class="bar"><b style="left:20.833333333333336%;width:16.666666666666664%"></b><i style="width:22.916666666666664%"></i></div><div class="n">5.5 (5–9)</div></div><div class="vrow"><div class="lab">Panturrilha</div><div class="bar"><b style="left:0%;width:25%"></b><i style="width:16.666666666666664%"></i></div><div class="n">4 (0–6)</div></div><p><b>Inferiores 41 · Superiores 32.5</b> → 56% (contando os finalizadores opcionais de panturrilha; sem eles: 37 · 32,5 → 53%) do volume em membros inferiores. Glúteo é o grupo de maior volume e treinado nos 3 dias; todo grupo superior é treinado ao menos 2×/semana (direto ou indireto).</p></div></section><section id="s_cardio"><h2 style="margin:24px 0 6px;color:var(--ac)">Cardio e pilates</h2><div class="card"><h2 style="margin:0 0 8px">Janela de cardio</h2><div class="grid7"><div class="d7 c"><b>Seg</b>Pilates + Z2</div><div class="d7 f"><b>Ter</b>Dia A</div><div class="d7 c"><b>Qua</b>Pilates + Z2 ou intervalado</div><div class="d7 f"><b>Qui</b>Dia B</div><div class="d7 c"><b>Sex</b>Pilates + Z2</div><div class="d7 f"><b>Sáb</b>Dia C</div><div class="d7 "><b>Dom</b>Descanso</div></div>
+ <ul><li><b>Pilates (Seg, Qua, Sex):</b> complementa core, mobilidade e controle postural. Não entra na contagem de volume de hipertrofia. Na segunda e na sexta (véspera dos dias de pernas), pedir à instrutora para não levar glúteo e posterior à exaustão.</li>
+<li><b>Z2 (base):</b> 2–3× por semana, 30–40 min, nos dias de pilates (logo depois da aula ou em outro horário) ou ≥6 h separado da musculação. Caminhada inclinada, bike ou elíptico.</li>
+ <li><b>Intensidade:</b> consegue conversar em frases completas, mas não cantar. Referência por FC abaixo.</li>
+ <li><b>Intervalado (opcional):</b> no máximo 1×/semana, só na quarta, no lugar do Z2 e não colado no pilates se a aula for intensa: o dia seguinte (Dia B) é mais de superior e o próximo dia de pernas pesado (Dia C, sábado) fica 72 h depois. Nunca na segunda nem na sexta, véspera dos dias de pernas.</li>
+ <li><b>Passos:</b> 7.000–10.000/dia contam como gasto energético sem prejudicar a recuperação.</li>
+ <li>Total ≤150 min/semana de cardio moderado mantém a interferência com a hipertrofia desprezível.</li></ul>
+ <div class="row">Idade: <span>—</span> <span id="fcz" class="note">informe a idade para ver a zona</span></div>
+ <div class="note">FCmáx estimada por Tanaka (208 − 0,7 × idade). É estimativa; se tiver teste ergométrico, usar a FC dele.</div></div></section><section id="s_regras"><h2 style="margin:24px 0 6px;color:var(--ac)">Progressão</h2><div class="card"><h2 style="margin:0 0 8px">Como progredir</h2><ul>
+<li><b>Dupla progressão:</b> fique na mesma carga até completar o teto da faixa (ex.: 12 de 8–12) em todas as séries com técnica limpa. Aí suba a carga (+2–5% ou o menor incremento) e volte ao piso.</li>
+<li><b>RIR</b> = repetições que ainda sobravam. RIR 2 = parou com 2 reps no tanque. Compostos pesados: 1–3. Isoladores: 0–1.</li>
+<li><b>Bloco:</b> S1→S4 progressivo, S5 deload. Repetir o ciclo; trocar variações (seletor em cada exercício) a cada 2 blocos, não a cada semana.</li>
+<li><b>Descanso:</b> compostos 2–2,5 min, isoladores 60–75 s. Botão "Feito" inicia o cronômetro.</li>
+<li><b>Se faltar tempo:</b> corte primeiro o finalizador e a 3ª série dos isoladores de superiores. Não corte o primeiro composto do dia.</li>
+<li><b>Sinais para antecipar o deload:</b> carga caindo 2 semanas seguidas, dor articular (não muscular), sono ruim.</li>
+</ul></div></section><section id="s_sig"><h2 style="margin:24px 0 6px;color:var(--ac)">Siglas</h2><div class="card"><h2 style="margin:0 0 8px">Tabela de siglas e termos</h2><table style="text-align:left"><tbody><tr><th colspan="2" style="text-align:left;color:var(--ac);padding-top:12px">Siglas e abreviações</th></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">RIR</td><td style="text-align:left">Repetições em reserva (Reps In Reserve): quantas repetições ainda sobravam ao parar a série. RIR 0 = falha; RIR 2 = sobravam 2.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Z2</td><td style="text-align:left">Zona 2 de frequência cardíaca: 60–70% da FCmáx, ritmo em que se conversa mas não se canta.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">FC</td><td style="text-align:left">Frequência cardíaca (batimentos por minuto).</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">FCmáx</td><td style="text-align:left">Frequência cardíaca máxima. Aqui estimada por 208 − 0,7 × idade (Tanaka).</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">bpm</td><td style="text-align:left">Batimentos por minuto.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">S1 … S5</td><td style="text-align:left">Semanas 1 a 5 do bloco (adaptação, acúmulo, acúmulo, pico, deload).</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Dia A / B / C</td><td style="text-align:left">As três fichas de musculação (terça, quinta e sábado).</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">reps</td><td style="text-align:left">Repetições.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">kg</td><td style="text-align:left">Quilogramas (carga).</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">3 × 8–12</td><td style="text-align:left">3 séries de 8 a 12 repetições.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">/perna, /lado</td><td style="text-align:left">Repetições contadas em cada perna ou lado (exercício unilateral).</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">½</td><td style="text-align:left">Meia série na contagem de volume: o músculo trabalha como auxiliar no exercício.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">g/kg/dia</td><td style="text-align:left">Gramas por quilo de peso corporal por dia (proteína).</td></tr><tr><th colspan="2" style="text-align:left;color:var(--ac);padding-top:12px">Termos do treino (em inglês ou jargão)</th></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Superset</td><td style="text-align:left">Dois exercícios seguidos sem descanso entre eles; descansa só depois do par.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Drop set</td><td style="text-align:left">Ao chegar perto da falha, reduz a carga ~20–30% e continua sem pausa.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Deload</td><td style="text-align:left">Semana de alívio: metade das séries, mesma carga, longe da falha.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Dupla progressão</td><td style="text-align:left">Primeiro aumenta as repetições até o teto da faixa; depois aumenta a carga e volta ao piso.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Falha técnica</td><td style="text-align:left">Ponto em que não dá para fazer mais uma repetição com a execução correta.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Séries de aproximação</td><td style="text-align:left">Séries leves de aquecimento antes do primeiro exercício; não contam como trabalho.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Hip thrust</td><td style="text-align:left">Elevação de quadril com as costas apoiadas no banco e barra sobre o quadril.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Glute bridge</td><td style="text-align:left">Elevação de quadril deitada no chão (versão mais curta do hip thrust).</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Stiff / Terra romeno</td><td style="text-align:left">Levantamento com joelhos quase estendidos, levando o quadril para trás; foco em posterior de coxa e glúteo.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Good morning</td><td style="text-align:left">Flexão de quadril com a barra nas costas; foco em posterior e lombar.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Leg press 45°</td><td style="text-align:left">Aparelho de empurrar a plataforma com as pernas, inclinado a 45°.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Hack machine</td><td style="text-align:left">Aparelho de agachamento guiado com encosto.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Smith</td><td style="text-align:left">Barra guiada em trilhos.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Pêndulo</td><td style="text-align:left">Aparelho de agachamento em arco (pendulum squat).</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Goblet</td><td style="text-align:left">Agachamento segurando um halter na frente do peito.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Afundo búlgaro</td><td style="text-align:left">Afundo com o pé de trás apoiado num banco.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Sissy squat</td><td style="text-align:left">Agachamento com joelhos à frente e tronco para trás; isola quadríceps.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Pull-through</td><td style="text-align:left">Extensão de quadril puxando o cabo por entre as pernas.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Rosca bayesiana</td><td style="text-align:left">Rosca na polia com o braço atrás do corpo (bíceps alongado).</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Overhead</td><td style="text-align:left">Com o braço acima da cabeça (ex.: tríceps francês).</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Pushdown</td><td style="text-align:left">Tríceps empurrando a polia para baixo.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Parcial alongada</td><td style="text-align:left">Fazer só a metade do movimento em que o músculo está mais esticado.</td></tr><tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">Intervalado (HIIT)</td><td style="text-align:left">Tiros curtos e fortes alternados com recuperação leve.</td></tr></tbody></table></div></section><section id="s_ev"><h2 style="margin:24px 0 6px;color:var(--ac)">Evidências</h2><div class="card"><h2 style="margin:0 0 8px">Base científica</h2><p><b><a href="https://pubmed.ncbi.nlm.nih.gov/32218059/" target="_blank">Roberts, Nuckols &amp; Krieger 2020 — J Strength Cond Res</a></b><br><span class="note">Meta-análise: homens e mulheres têm a mesma hipertrofia relativa com o mesmo protocolo. Justifica não 'aliviar' o treino por ser feminino.</span></p><p><b><a href="https://pubmed.ncbi.nlm.nih.gov/41343037/" target="_blank">Pelland et al. 2026 — Sports Med</a></b><br><span class="note">Mais volume = mais hipertrofia, com retorno decrescente; frequência quase não muda hipertrofia com volume igual. Base da contagem fracionada e do volume alvo.</span></p><p><b><a href="https://doi.org/10.1080/02640414.2016.1210197" target="_blank">Schoenfeld, Ogborn &amp; Krieger 2017 — J Sports Sci</a></b><br><span class="note">Dose-resposta entre séries semanais e hipertrofia (≥10 séries/semana &gt; menos).</span></p><p><b><a href="https://pubmed.ncbi.nlm.nih.gov/37461495/" target="_blank">Plotkin et al. 2023 — Front Physiol</a></b><br><span class="note">Agachamento e hip thrust deram hipertrofia de glúteo similar; agachamento deu mais quadríceps e adutores. Por isso o plano usa os dois.</span></p><p><b><a href="https://pubmed.ncbi.nlm.nih.gov/33009197/" target="_blank">Maeo et al. 2021 — Med Sci Sports Exerc</a></b><br><span class="note">Flexora sentada &gt; deitada para hipertrofia de posterior de coxa.</span></p><p><b><a href="https://doi.org/10.1080/17461391.2022.2100279" target="_blank">Maeo et al. 2023 — Eur J Sport Sci</a></b><br><span class="note">Tríceps overhead &gt; pushdown para hipertrofia do tríceps.</span></p><p><b><a href="https://europepmc.org/article/MED/37015016" target="_blank">Kassiano et al. 2023 — J Strength Cond Res</a></b><br><span class="note">Em mulheres, panturrilha parcial na porção alongada cresceu mais que amplitude completa.</span></p><p><b><a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/apha.12234" target="_blank">Hunter 2014 — Acta Physiol</a></b><br><span class="note">Mulheres tendem a fadigar menos em esforços submáximos, o que permite descansos um pouco menores nos isoladores.</span></p><p><b><a href="https://pubmed.ncbi.nlm.nih.gov/28698222/" target="_blank">Morton et al. 2018 — Br J Sports Med</a></b><br><span class="note">Proteína: ganho de massa magra estabiliza em torno de 1,6 g/kg/dia.</span></p>
+<p class="note"><b>Prática de campo:</b> divisão em 3 dias com glúteo nos 3 dias e superior completo 2× é o padrão mais usado por treinadores de hipertrofia feminina (ex.: Contreras, coautor do Plotkin 2023), porque glúteo tolera bem frequência alta e superiores se mantêm com volume moderado.</p></div></section></div></main><div id="timer" title="Toque para parar"></div>
+<script>
+const DAYS=[{"id": "A", "nome": "Dia A", "titulo": "Glúteo & Quadríceps + Empurrar", "dia": "Terça", "ex": [{"n": "Agachamento livre", "alt": ["Hack machine", "Agachamento no Smith", "Agachamento goblet (fase de adaptação)"], "s": 3, "r": "6–10", "rir": "2–3", "rest": 150, "t": 50, "m": {"Quadríceps": 1, "Glúteos": 1}, "nota": "Profundidade máxima com coluna neutra. Plotkin 2023: agachamento cresce glúteo tanto quanto hip thrust e ainda mais coxa."}, {"n": "Hip thrust com barra", "alt": ["Hip thrust na máquina", "Glute bridge no Smith"], "s": 3, "r": "8–12", "rir": "1–2", "rest": 120, "t": 45, "m": {"Glúteos": 1}, "nota": "Pausa de 1 s no topo, queixo para dentro, canela vertical no topo."}, {"n": "Afundo búlgaro (halteres)", "alt": ["Afundo reverso no Smith", "Passada andando"], "s": 2, "r": "8–12/perna", "rir": "1–2", "rest": 60, "t": 90, "m": {"Quadríceps": 1, "Glúteos": 1}, "nota": "Tronco levemente inclinado à frente = mais glúteo. Descanso só após as duas pernas."}, {"n": "Cadeira extensora", "alt": ["Sissy squat assistido"], "s": 2, "r": "10–15", "rir": "0–1", "rest": 75, "t": 45, "m": {"Quadríceps": 1}, "nota": "Encosto reclinado ao máximo (reto femoral alongado). Última série pode ter drop set."}, {"n": "Supino inclinado com halteres", "alt": ["Supino inclinado máquina", "Supino reto halteres"], "s": 3, "r": "8–12", "rir": "1–2", "rest": 120, "t": 45, "m": {"Peito": 1, "Tríceps": 0.5, "Ombros": 0.5}, "nota": "Banco a 30°. Descer até alongar o peito."}, {"n": "Elevação lateral (halter ou polia)", "alt": ["Elevação lateral máquina"], "s": 2, "r": "12–20", "rir": "0–1", "rest": 0, "t": 40, "ss": "A6", "m": {"Ombros": 1}, "nota": "Superset com o próximo. Sem balanço."}, {"n": "Tríceps francês na polia (overhead)", "alt": ["Tríceps francês com halter"], "s": 2, "r": "10–15", "rir": "0–1", "rest": 60, "t": 40, "ss": "A6", "m": {"Tríceps": 1}, "nota": "Maeo 2023: overhead gerou ~1,4x mais hipertrofia de tríceps que pushdown."}], "extra": {"n": "Panturrilha no leg press (parcial alongada)", "s": 2, "r": "15–20", "rir": "0–1", "rest": 45, "t": 40, "m": {"Panturrilha": 1}, "nota": "Opcional se sobrar tempo. Kassiano 2023 (mulheres): parcial na porção alongada > amplitude completa."}, "min": 59}, {"id": "B", "nome": "Dia B", "titulo": "Superior completo + Posterior de coxa", "dia": "Quinta", "ex": [{"n": "Stiff / Levantamento terra romeno", "alt": ["Stiff com halteres", "Good morning no Smith"], "s": 3, "r": "6–10", "rir": "2", "rest": 150, "t": 50, "m": {"Posterior de coxa": 1, "Glúteos": 0.5}, "nota": "Quadril para trás, barra rente à perna, até sentir alongar o posterior sem arredondar a lombar."}, {"n": "Puxada frente (pegada neutra ou aberta)", "alt": ["Barra fixa assistida", "Puxada unilateral na polia"], "s": 3, "r": "8–12", "rir": "1–2", "rest": 120, "t": 45, "m": {"Costas": 1, "Bíceps": 0.5}, "nota": "Puxar com o cotovelo, peito em direção à barra."}, {"n": "Remada apoiada no peito", "alt": ["Remada máquina", "Remada baixa no cabo"], "s": 3, "r": "8–12", "rir": "1–2", "rest": 120, "t": 45, "m": {"Costas": 1, "Bíceps": 0.5}, "nota": "Apoio no peito tira carga da lombar (já trabalhada no stiff)."}, {"n": "Desenvolvimento com halteres sentada", "alt": ["Desenvolvimento máquina"], "s": 2, "r": "8–12", "rir": "1–2", "rest": 90, "t": 45, "m": {"Ombros": 0.5, "Tríceps": 0.5}, "nota": "Banco a 80–85°, sem travar no topo."}, {"n": "Cadeira flexora (sentada)", "alt": ["Mesa flexora (deitada)"], "s": 3, "r": "10–15", "rir": "0–1", "rest": 75, "t": 45, "m": {"Posterior de coxa": 1}, "nota": "Maeo 2021: flexora SENTADA deu mais hipertrofia de posterior que a deitada (quadril flexionado = músculo alongado)."}, {"n": "Elevação lateral na polia", "alt": ["Elevação lateral halter"], "s": 2, "r": "15–20", "rir": "0–1", "rest": 0, "t": 40, "ss": "B6", "m": {"Ombros": 1}, "nota": "Superset com o próximo."}, {"n": "Rosca inclinada com halteres", "alt": ["Rosca bayesiana na polia"], "s": 2, "r": "10–15", "rir": "0–1", "rest": 60, "t": 40, "ss": "B6", "m": {"Bíceps": 1}, "nota": "Braço atrás do tronco = bíceps alongado."}], "extra": null, "min": 60}, {"id": "C", "nome": "Dia C", "titulo": "Glúteo & Posterior + Puxar", "dia": "Sábado", "ex": [{"n": "Leg press 45° (pés altos e afastados)", "alt": ["Agachamento hack", "Pêndulo"], "s": 3, "r": "8–12", "rir": "1–2", "rest": 120, "t": 45, "m": {"Quadríceps": 1, "Glúteos": 0.5}, "nota": "Pés altos aumentam flexão de quadril = mais glúteo. Descer até o limite sem tirar o quadril do banco."}, {"n": "Hip thrust (ou glute bridge máquina)", "alt": ["Elevação pélvica unilateral", "Extensão de quadril no cabo"], "s": 3, "r": "10–15", "rir": "1", "rest": 90, "t": 45, "m": {"Glúteos": 1}, "nota": "Carga um pouco menor que no Dia A, mais repetições."}, {"n": "Cadeira flexora (sentada)", "alt": ["Flexora unilateral"], "s": 2, "r": "10–15", "rir": "0–1", "rest": 75, "t": 45, "m": {"Posterior de coxa": 1}, "nota": "Fase excêntrica de 3 s."}, {"n": "Cadeira abdutora", "alt": ["Abdução no cabo", "Abdução deitada com caneleira"], "s": 2, "r": "15–25", "rir": "0–1", "rest": 60, "t": 40, "m": {"Glúteos": 1}, "nota": "Tronco inclinado à frente para pegar mais glúteo médio/superior."}, {"n": "Extensão de quadril 45° (ênfase glúteo)", "alt": ["Hiperextensão reversa", "Pull-through no cabo"], "s": 2, "r": "12–15", "rir": "0–1", "rest": 60, "t": 40, "m": {"Glúteos": 1, "Posterior de coxa": 0.5}, "nota": "Pés abertos e rodados para fora, coluna arredondada levemente no alto (tira a lombar, põe glúteo)."}, {"n": "Remada unilateral com halter", "alt": ["Remada unilateral máquina", "Remada baixa no cabo"], "s": 3, "r": "8–12/lado", "rir": "1–2", "rest": 60, "t": 80, "m": {"Costas": 1, "Bíceps": 0.5}, "nota": "Alternar os lados sem pausa; descanso após os dois."}, {"n": "Supino máquina (ou flexão de braço)", "alt": ["Crucifixo máquina", "Flexão com joelhos"], "s": 2, "r": "8–12", "rir": "1–2", "rest": 90, "t": 45, "m": {"Peito": 1, "Tríceps": 0.5}, "nota": ""}], "extra": {"n": "Panturrilha sentada ou em pé (parcial alongada)", "s": 2, "r": "15–20", "rir": "0–1", "rest": 45, "t": 40, "m": {"Panturrilha": 1}, "nota": "Opcional se sobrar tempo."}, "min": 55}];
+const WEEKS=[
+ {n:"S1 · Adaptação",rir:+1,deload:false,txt:"RIR alvo +1 sobre a ficha. Aprender técnica e achar cargas."},
+ {n:"S2 · Acúmulo",rir:0,deload:false,txt:"RIR da ficha. Dupla progressão: bateu o teto de reps em todas as séries, sobe carga."},
+ {n:"S3 · Acúmulo",rir:0,deload:false,txt:"RIR da ficha. Tentar +1 rep ou +carga em relação à S2."},
+ {n:"S4 · Pico",rir:-0.5,deload:false,txt:"Isoladores até a falha técnica (RIR 0). Compostos mantêm RIR 1–2."},
+ {n:"S5 · Deload",rir:+2,deload:true,txt:"Metade das séries, mesma carga, longe da falha. Depois recomeça em S2 com cargas novas."}];
+const TARGET={"Glúteos":[14,20],"Quadríceps":[9,14],"Posterior de coxa":[8,12],"Costas":[8,12],"Peito":[5,9],"Ombros":[6,10],"Bíceps":[5,9],"Tríceps":[5,9],"Panturrilha":[0,6]};
+const LOWER=["Glúteos","Quadríceps","Posterior de coxa","Panturrilha"];
+let st=JSON.parse(localStorage.getItem("sab_treino_v1")||"{}");if(st.week==null)st.week=0;if(!st.tab)st.tab="A";st.log=st.log||{};st.alt=st.alt||{};st.extra=st.extra||{};
+const save=()=>localStorage.setItem("sab_treino_v1",JSON.stringify(st));
+const W=()=>WEEKS[st.week];const nS=s=>W().deload?Math.max(1,Math.round(s/2)):s;
+function rirTxt(r){if(!W().rir)return r;const p=r.split("–").map(Number),f=x=>Math.max(0,x+W().rir);return p.length>1?`${f(p[0])}–${f(p[1])}`:`${f(p[0])}`}
+const wsel=document.getElementById("week");WEEKS.forEach((w,i)=>wsel.add(new Option(w.n,i)));wsel.value=st.week;
+wsel.onchange=()=>{st.week=+wsel.value;save();render()};
+const TABS=[...DAYS.map(d=>({id:d.id,l:`${d.nome} · ${d.dia}`})),{id:"vol",l:"Volume"},{id:"cardio",l:"Cardio"},{id:"regras",l:"Progressão"},{id:"sig",l:"Siglas"},{id:"ev",l:"Evidências"}];
+function tabs(){document.getElementById("tabs").innerHTML=TABS.map(t=>`<button class="tab ${st.tab==t.id?"on":""}" onclick="st.tab='${t.id}';save();render()">${t.l}</button>`).join("")}
+function key(d,i,s){return `${st.week}|${d}|${i}|${s}`}
+function exCard(d,e,i,isExtra){
+ const sets=nS(e.s),alt=st.alt[d.id+i]||e.n;let rows="";
+ for(let s=0;s<sets;s++){const k=key(d.id,i,s),v=st.log[k]||{};
+  rows+=`<tr class="${v.ok?"done":""}"><td>${s+1}</td><td><input type="number" step="0.5" placeholder="kg" value="${v.kg==null?"":v.kg}" onchange="setL('${k}','kg',this.value)"></td>
+  <td><input type="number" placeholder="reps" value="${v.r==null?"":v.r}" onchange="setL('${k}','r',this.value)"></td>
+  <td><input type="checkbox" ${v.ok?"checked":""} onchange="setL('${k}','ok',this.checked);if(this.checked&&${e.rest||0})startT(${e.rest||0});render()"></td></tr>`}
+ const prev=st.week>0?lastWeek(d.id,i):"";
+ return `<div class="card ex ${e.ss?"ss":""}"><h3>${isExtra?"(Opcional) ":""}${alt}</h3>
+ <div><span class="pill ac">${sets} × ${e.r}</span><span class="pill">RIR ${rirTxt(e.rir)}</span><span class="pill">${e.rest?`descanso ${e.rest}s`:"→ direto p/ o próximo (superset)"}</span>${Object.entries(e.m).map(([k,w])=>`<span class="pill">${k}${w<1?" ½":""}</span>`).join("")}</div>
+ ${e.alt?`<div style="margin-top:6px"><select onchange="st.alt['${d.id+i}']=this.value;save();render()">${[e.n,...e.alt].map(a=>`<option ${a==alt?"selected":""}>${a}</option>`).join("")}</select></div>`:""}
+ ${e.nota?`<div class="note">${e.nota}</div>`:""}${prev?`<div class="note">Semana anterior: ${prev}</div>`:""}
+ <table><tr><th>Série</th><th>Carga</th><th>Reps</th><th>Feito</th></tr>${rows}</table></div>`}
+function lastWeek(d,i){let out=[];for(let s=0;s<4;s++){const v=st.log[`${st.week-1}|${d}|${i}|${s}`];if(v&&(v.kg||v.r))out.push(`${v.kg||"?"}kg×${v.r||"?"}`)}return out.join(" · ")}
+function setL(k,f,v){st.log[k]=st.log[k]||{};st.log[k][f]=v;save()}
+function dayView(d){let tot=0,done=0;d.ex.forEach((e,i)=>{for(let s=0;s<nS(e.s);s++){tot++;if((st.log[key(d.id,i,s)]||{}).ok)done++}});
+ let h=`<div class="card"><h2 style="margin:0">${d.nome} · ${d.titulo}</h2><div class="note">${d.dia} · tempo estimado ${d.min} min (inclui 8 min de aquecimento geral + séries de aproximação). ${W().txt}</div>
+ <div class="prog" style="margin-top:8px"><i style="width:${tot?done/tot*100:0}%"></i></div><div class="note">${done}/${tot} séries feitas</div></div>
+ <div class="card note"><b>Aquecimento (8 min):</b> 5 min de bike/esteira leve + mobilidade de quadril e ombro. No 1º exercício: 2–3 séries de aproximação (50%·70%·85% da carga) que não contam como série de trabalho.</div>`;
+ d.ex.forEach((e,i)=>h+=exCard(d,e,i));
+ if(d.extra){h+=`<div class="card row"><label><input type="checkbox" ${st.extra[d.id]?"checked":""} onchange="st.extra['${d.id}']=this.checked;save();render()"> Incluir finalizador opcional (panturrilha)</label></div>`;if(st.extra[d.id])h+=exCard(d,d.extra,99,true)}
+ return h}
+function volume(){const v={};DAYS.forEach(d=>{[...d.ex,...(d.extra&&st.extra[d.id]?[d.extra]:[])].forEach(e=>{for(const[k,w]of Object.entries(e.m))v[k]=(v[k]||0)+w*nS(e.s)})});return v}
+function volView(){const v=volume();let lo=0,up=0;for(const[k,x]of Object.entries(v))(LOWER.includes(k)?lo+=x:up+=x);
+ const mx=24;let h=`<div class="card"><h2 style="margin:0 0 4px">Volume semanal (séries fracionadas)</h2><div class="note">Contagem fracionada (Pelland et al., Sports Med 2026): série direta = 1, músculo secundário = ½. Faixa verde = alvo para intermediária. Calculado ao vivo a partir da ficha e da semana selecionada.</div>`;
+ Object.keys(TARGET).forEach(k=>{const x=v[k]||0,[a,b]=TARGET[k];if(!x&&k=="Panturrilha")return;h+=`<div class="vrow"><div class="lab">${k}</div><div class="bar"><b style="left:${a/mx*100}%;width:${(b-a)/mx*100}%"></b><i style="width:${Math.min(x,mx)/mx*100}%"></i></div><div class="n">${x} (${a}–${b})</div></div>`});
+ h+=`<p><b>Inferiores ${lo} · Superiores ${up}</b> → ${(lo/(lo+up)*100).toFixed(0)}% do volume em membros inferiores. Glúteo é o grupo de maior volume e treinado nos 3 dias; todo grupo superior é treinado ao menos 2×/semana (direto ou indireto).</p></div>`;return h}
+function cardioView(){const sem=[["Seg","Pilates + Z2",2],["Ter","Dia A",1],["Qua","Pilates + Z2 ou intervalado",2],["Qui","Dia B",1],["Sex","Pilates + Z2",2],["Sáb","Dia C",1],["Dom","Descanso",0]];
+ return `<div class="card"><h2 style="margin:0 0 8px">Janela de cardio</h2><div class="grid7">${sem.map(s=>`<div class="d7 ${s[2]==1?"f":s[2]==2?"c":""}"><b>${s[0]}</b>${s[1]}</div>`).join("")}</div>
+ <ul><li><b>Pilates (Seg, Qua, Sex):</b> complementa core, mobilidade e controle postural. Não entra na contagem de volume de hipertrofia. Na segunda e na sexta (véspera dos dias de pernas), pedir à instrutora para não levar glúteo e posterior à exaustão.</li>
+<li><b>Z2 (base):</b> 2–3× por semana, 30–40 min, nos dias de pilates (logo depois da aula ou em outro horário) ou ≥6 h separado da musculação. Caminhada inclinada, bike ou elíptico.</li>
+ <li><b>Intensidade:</b> consegue conversar em frases completas, mas não cantar. Referência por FC abaixo.</li>
+ <li><b>Intervalado (opcional):</b> no máximo 1×/semana, só na quarta, no lugar do Z2 e não colado no pilates se a aula for intensa: o dia seguinte (Dia B) é mais de superior e o próximo dia de pernas pesado (Dia C, sábado) fica 72 h depois. Nunca na segunda nem na sexta, véspera dos dias de pernas.</li>
+ <li><b>Passos:</b> 7.000–10.000/dia contam como gasto energético sem prejudicar a recuperação.</li>
+ <li>Total ≤150 min/semana de cardio moderado mantém a interferência com a hipertrofia desprezível.</li></ul>
+ <div class="row">Idade: <input id="age" type="number" style="width:70px" value="${st.age||""}" oninput="st.age=this.value;save();fc()"> <span id="fcz" class="note"></span></div>
+ <div class="note">FCmáx estimada por Tanaka (208 − 0,7 × idade). É estimativa; se tiver teste ergométrico, usar a FC dele.</div></div>`}
+function fc(){const a=+st.age,el=document.getElementById("fcz");if(!el)return;if(!a){el.textContent="informe a idade para ver a zona";return}const m=208-0.7*a;el.textContent=`FCmáx ≈ ${m.toFixed(0)} bpm · Z2 (60–70%) ≈ ${(m*.6).toFixed(0)}–${(m*.7).toFixed(0)} bpm`}
+function regrasView(){return `<div class="card"><h2 style="margin:0 0 8px">Como progredir</h2><ul>
+<li><b>Dupla progressão:</b> fique na mesma carga até completar o teto da faixa (ex.: 12 de 8–12) em todas as séries com técnica limpa. Aí suba a carga (+2–5% ou o menor incremento) e volte ao piso.</li>
+<li><b>RIR</b> = repetições que ainda sobravam. RIR 2 = parou com 2 reps no tanque. Compostos pesados: 1–3. Isoladores: 0–1.</li>
+<li><b>Bloco:</b> S1→S4 progressivo, S5 deload. Repetir o ciclo; trocar variações (seletor em cada exercício) a cada 2 blocos, não a cada semana.</li>
+<li><b>Descanso:</b> compostos 2–2,5 min, isoladores 60–75 s. Botão "Feito" inicia o cronômetro.</li>
+<li><b>Se faltar tempo:</b> corte primeiro o finalizador e a 3ª série dos isoladores de superiores. Não corte o primeiro composto do dia.</li>
+<li><b>Sinais para antecipar o deload:</b> carga caindo 2 semanas seguidas, dor articular (não muscular), sono ruim.</li>
+</ul></div>`}
+function evView(){const R=[
+["Roberts, Nuckols & Krieger 2020 — J Strength Cond Res","Meta-análise: homens e mulheres têm a mesma hipertrofia relativa com o mesmo protocolo. Justifica não 'aliviar' o treino por ser feminino.","https://pubmed.ncbi.nlm.nih.gov/32218059/"],
+["Pelland et al. 2026 — Sports Med","Mais volume = mais hipertrofia, com retorno decrescente; frequência quase não muda hipertrofia com volume igual. Base da contagem fracionada e do volume alvo.","https://pubmed.ncbi.nlm.nih.gov/41343037/"],
+["Schoenfeld, Ogborn & Krieger 2017 — J Sports Sci","Dose-resposta entre séries semanais e hipertrofia (≥10 séries/semana > menos).","https://doi.org/10.1080/02640414.2016.1210197"],
+["Plotkin et al. 2023 — Front Physiol","Agachamento e hip thrust deram hipertrofia de glúteo similar; agachamento deu mais quadríceps e adutores. Por isso o plano usa os dois.","https://pubmed.ncbi.nlm.nih.gov/37461495/"],
+["Maeo et al. 2021 — Med Sci Sports Exerc","Flexora sentada > deitada para hipertrofia de posterior de coxa.","https://pubmed.ncbi.nlm.nih.gov/33009197/"],
+["Maeo et al. 2023 — Eur J Sport Sci","Tríceps overhead > pushdown para hipertrofia do tríceps.","https://doi.org/10.1080/17461391.2022.2100279"],
+["Kassiano et al. 2023 — J Strength Cond Res","Em mulheres, panturrilha parcial na porção alongada cresceu mais que amplitude completa.","https://europepmc.org/article/MED/37015016"],
+["Hunter 2014 — Acta Physiol","Mulheres tendem a fadigar menos em esforços submáximos, o que permite descansos um pouco menores nos isoladores.","https://onlinelibrary.wiley.com/doi/abs/10.1111/apha.12234"],
+["Morton et al. 2018 — Br J Sports Med","Proteína: ganho de massa magra estabiliza em torno de 1,6 g/kg/dia.","https://pubmed.ncbi.nlm.nih.gov/28698222/"]];
+return `<div class="card"><h2 style="margin:0 0 8px">Base científica</h2>${R.map(r=>`<p><b><a href="${r[2]}" target="_blank">${r[0]}</a></b><br><span class="note">${r[1]}</span></p>`).join("")}
+<p class="note"><b>Prática de campo:</b> divisão em 3 dias com glúteo nos 3 dias e superior completo 2× é o padrão mais usado por treinadores de hipertrofia feminina (ex.: Contreras, coautor do Plotkin 2023), porque glúteo tolera bem frequência alta e superiores se mantêm com volume moderado.</p></div>`}
+function sigView(){const S=[
+["Siglas e abreviações",""],
+["RIR","Repetições em reserva (Reps In Reserve): quantas repetições ainda sobravam ao parar a série. RIR 0 = falha; RIR 2 = sobravam 2."],
+["Z2","Zona 2 de frequência cardíaca: 60–70% da FCmáx, ritmo em que se conversa mas não se canta."],
+["FC","Frequência cardíaca (batimentos por minuto)."],
+["FCmáx","Frequência cardíaca máxima. Aqui estimada por 208 − 0,7 × idade (Tanaka)."],
+["bpm","Batimentos por minuto."],
+["S1 … S5","Semanas 1 a 5 do bloco (adaptação, acúmulo, acúmulo, pico, deload)."],
+["Dia A / B / C","As três fichas de musculação (terça, quinta e sábado)."],
+["reps","Repetições."],
+["kg","Quilogramas (carga)."],
+["3 × 8–12","3 séries de 8 a 12 repetições."],
+["/perna, /lado","Repetições contadas em cada perna ou lado (exercício unilateral)."],
+["½","Meia série na contagem de volume: o músculo trabalha como auxiliar no exercício."],
+["g/kg/dia","Gramas por quilo de peso corporal por dia (proteína)."],
+["Termos do treino (em inglês ou jargão)",""],
+["Superset","Dois exercícios seguidos sem descanso entre eles; descansa só depois do par."],
+["Drop set","Ao chegar perto da falha, reduz a carga ~20–30% e continua sem pausa."],
+["Deload","Semana de alívio: metade das séries, mesma carga, longe da falha."],
+["Dupla progressão","Primeiro aumenta as repetições até o teto da faixa; depois aumenta a carga e volta ao piso."],
+["Falha técnica","Ponto em que não dá para fazer mais uma repetição com a execução correta."],
+["Séries de aproximação","Séries leves de aquecimento antes do primeiro exercício; não contam como trabalho."],
+["Hip thrust","Elevação de quadril com as costas apoiadas no banco e barra sobre o quadril."],
+["Glute bridge","Elevação de quadril deitada no chão (versão mais curta do hip thrust)."],
+["Stiff / Terra romeno","Levantamento com joelhos quase estendidos, levando o quadril para trás; foco em posterior de coxa e glúteo."],
+["Good morning","Flexão de quadril com a barra nas costas; foco em posterior e lombar."],
+["Leg press 45°","Aparelho de empurrar a plataforma com as pernas, inclinado a 45°."],
+["Hack machine","Aparelho de agachamento guiado com encosto."],
+["Smith","Barra guiada em trilhos."],
+["Pêndulo","Aparelho de agachamento em arco (pendulum squat)."],
+["Goblet","Agachamento segurando um halter na frente do peito."],
+["Afundo búlgaro","Afundo com o pé de trás apoiado num banco."],
+["Sissy squat","Agachamento com joelhos à frente e tronco para trás; isola quadríceps."],
+["Pull-through","Extensão de quadril puxando o cabo por entre as pernas."],
+["Rosca bayesiana","Rosca na polia com o braço atrás do corpo (bíceps alongado)."],
+["Overhead","Com o braço acima da cabeça (ex.: tríceps francês)."],
+["Pushdown","Tríceps empurrando a polia para baixo."],
+["Parcial alongada","Fazer só a metade do movimento em que o músculo está mais esticado."],
+["Intervalado (HIIT)","Tiros curtos e fortes alternados com recuperação leve."]];
+return `<div class="card"><h2 style="margin:0 0 8px">Tabela de siglas e termos</h2><table style="text-align:left">${S.map(s=>s[1]?`<tr><td style="text-align:left;white-space:nowrap;font-weight:600;vertical-align:top">${s[0]}</td><td style="text-align:left">${s[1]}</td></tr>`:`<tr><th colspan="2" style="text-align:left;color:var(--ac);padding-top:12px">${s[0]}</th></tr>`).join("")}</table></div>`}
+function render(){tabs();const v=document.getElementById("view"),d=DAYS.find(x=>x.id==st.tab);
+ document.getElementById("weekInfo").textContent=W().txt;
+ v.innerHTML=d?dayView(d):st.tab=="vol"?volView():st.tab=="cardio"?cardioView():st.tab=="regras"?regrasView():st.tab=="sig"?sigView():evView();fc()}
+let tI;function startT(s){clearInterval(tI);const el=document.getElementById("timer");let t=s;el.style.display="block";
+ const f=()=>{el.textContent=`⏱ ${Math.floor(t/60)}:${String(t%60).padStart(2,"0")}`;if(t--<=0){clearInterval(tI);el.textContent="Próxima série!";beep();setTimeout(()=>el.style.display="none",4000)}};f();tI=setInterval(f,1000)}
+document.getElementById("timer").onclick=()=>{clearInterval(tI);document.getElementById("timer").style.display="none"};
+function beep(){try{const c=new AudioContext(),o=c.createOscillator();o.connect(c.destination);o.frequency.value=880;o.start();setTimeout(()=>o.stop(),400)}catch(e){}if(navigator.vibrate)navigator.vibrate([200,100,200])}
+function exportLog(){const b=new Blob([JSON.stringify(st,null,1)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="treino_sabrina_registros.json";a.click()}
+function resetWeek(){if(!confirm("Apagar registros desta semana?"))return;for(const k in st.log)if(k.startsWith(st.week+"|"))delete st.log[k];save();render()}
+document.getElementById("ctrl").style.display="flex";var _s=document.getElementById("static");if(_s)_s.parentNode.removeChild(_s);
+render();
+</script></body></html>
