@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>LK · Diário de sono</title>
+<style>
+:root{--bg:#f6f4fb;--card:#fff;--ink:#2b2840;--mut:#77738c;--pri:#6c5ce7;--pri2:#a29bfe;--ok:#00b894;--warn:#e17055;--line:#e6e3f0}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.45}
+header{background:linear-gradient(135deg,#6c5ce7,#8e7cf0);color:#fff;padding:18px 16px 14px}
+header h1{margin:0;font-size:1.35rem}
+header p{margin:4px 0 0;opacity:.9;font-size:.9rem}
+nav{position:sticky;top:0;z-index:5;display:flex;background:#fff;border-bottom:1px solid var(--line)}
+nav button{flex:1;border:0;background:none;padding:12px 4px;font-size:.92rem;color:var(--mut);border-bottom:3px solid transparent;font-weight:600}
+nav button.on{color:var(--pri);border-bottom-color:var(--pri)}
+main{max-width:640px;margin:0 auto;padding:12px}
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(40,30,90,.07)}
+.card h2{font-size:1.05rem;margin:0 0 8px}
+.card h3{font-size:.98rem;margin:14px 0 6px}
+.note{background:#efeafe;border-left:4px solid var(--pri);padding:10px 12px;border-radius:8px;font-size:.9rem}
+.alert{background:#fff1ec;border-left:4px solid var(--warn);padding:10px 12px;border-radius:8px;font-size:.9rem}
+label{display:block;font-size:.88rem;color:var(--mut);margin:10px 0 4px}
+input[type=time],input[type=date],input[type=number],textarea,select{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;font-size:1rem;background:#fff;color:var(--ink)}
+textarea{min-height:70px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.scale{display:flex;align-items:center;gap:10px}
+.scale input{flex:1;accent-color:var(--pri)}
+.scale output{min-width:2.2em;text-align:center;font-weight:700;color:var(--pri);font-size:1.1rem}
+.hint{font-size:.78rem;color:var(--mut);display:flex;justify-content:space-between}
+.chk{display:flex;gap:8px;flex-wrap:wrap}
+.chk label{display:flex;align-items:center;gap:6px;margin:0;padding:8px 12px;border:1px solid var(--line);border-radius:20px;color:var(--ink);font-size:.9rem;background:#fff}
+.chk input{accent-color:var(--pri)}
+.btn{display:block;width:100%;border:0;border-radius:12px;padding:14px;font-size:1rem;font-weight:700;background:var(--pri);color:#fff;margin-top:14px}
+.btn.sec{background:#efeafe;color:var(--pri)}
+.btn.ok{background:var(--ok)}
+.btn.danger{background:#fff;color:var(--warn);border:1px solid var(--warn)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kpi{background:#f3f0fd;border-radius:10px;padding:10px;text-align:center}
+.kpi b{display:block;font-size:1.3rem;color:var(--pri)}
+.kpi span{font-size:.78rem;color:var(--mut)}
+.entry{border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;font-size:.9rem}
+.entry .top{display:flex;justify-content:space-between;font-weight:700}
+.entry .acts{display:flex;gap:8px;margin-top:8px}
+.entry .acts button{flex:1;border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px;font-size:.85rem}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#2b2840;color:#fff;padding:10px 16px;border-radius:20px;font-size:.9rem;display:none;z-index:9}
+ul{padding-left:20px;margin:6px 0}
+li{margin:4px 0}
+.tab{display:none}
+.tab.on{display:block}
+.calc{font-size:.9rem;color:var(--mut);margin-top:8px}
+footer{text-align:center;color:var(--mut);font-size:.75rem;padding:16px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌙 Diário de sono</h1>
+  <p>Leva 2 minutos. Preencha de manhã, logo depois de levantar.</p>
+</header>
+<nav id="nav" style="display:none">
+  <button data-t="diario" class="on">Hoje</button>
+  <button data-t="historico">Histórico</button>
+  <button data-t="dicas">Dicas</button>
+</nav>
+<main>
+
+<noscript><div class="card alert">Esta visualização não roda o diário. Abra o link no Safari ou no Chrome para preencher. As dicas estão logo abaixo.</div></noscript>
+
+<!-- ============ DIÁRIO ============ -->
+<section id="t_diario" class="tab">
+  <div class="card note">
+    <b>Quem vê este diário:</b> o que você anota fica guardado só neste celular. Quando você tocar em <b>Exportar</b>, o registro vai para o seu pai, que leva ao seu psiquiatra para ajudar no tratamento. Seja sincera: não existe resposta certa ou errada.
+  </div>
+
+  <div class="card">
+    <h2>A noite</h2>
+    <label for="f_data">Noite de (dia em que você foi dormir)</label>
+    <input type="date" id="f_data">
+
+    <div class="row">
+      <div><label for="f_rem">Tomou o remédio da noite às</label><input type="time" id="f_rem"></div>
+      <div><label for="f_deitou">Deitou na cama às</label><input type="time" id="f_deitou"></div>
+    </div>
+    <div class="row">
+      <div><label for="f_luz">Apagou a luz / largou o celular às</label><input type="time" id="f_luz"></div>
+      <div><label for="f_lat">Demorou quanto para dormir? (min)</label><input type="number" id="f_lat" min="0" max="600" inputmode="numeric" placeholder="ex.: 30"></div>
+    </div>
+    <div class="row">
+      <div><label for="f_desp">Quantas vezes acordou?</label><input type="number" id="f_desp" min="0" max="30" inputmode="numeric" placeholder="0"></div>
+      <div><label for="f_waso">Tempo acordada no meio da noite (min, somado)</label><input type="number" id="f_waso" min="0" max="600" inputmode="numeric" placeholder="0"></div>
+    </div>
+    <div class="row">
+      <div><label for="f_acordou">Acordou de vez às</label><input type="time" id="f_acordou"></div>
+      <div><label for="f_levantou">Saiu da cama às</label><input type="time" id="f_levantou"></div>
+    </div>
+    <div class="calc" id="calc">—</div>
+  </div>
+
+  <div class="card">
+    <h2>Como foi</h2>
+    <label for="f_pes">Quantos pesadelos você lembra?</label>
+    <input type="number" id="f_pes" min="0" max="20" inputmode="numeric" placeholder="0">
+
+    <div id="scales"></div>
+
+    <h3>Marque o que aconteceu</h3>
+    <div class="chk">
+      <label><input type="checkbox" id="c_pernas"> Pernas inquietas</label>
+      <label><input type="checkbox" id="c_dentes"> Acordei com mandíbula/dentes doendo</label>
+      <label><input type="checkbox" id="c_suor"> Acordei suada ou com calor</label>
+      <label><input type="checkbox" id="c_menst"> Estou menstruada</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>O dia de ontem</h2>
+    <div class="row">
+      <div><label for="f_caf">Café, chá preto/mate, refri de cola ou energético (doses)</label><input type="number" id="f_caf" min="0" max="20" inputmode="numeric" placeholder="0"></div>
+      <div><label for="f_cafh">Última dose às</label><input type="time" id="f_cafh"></div>
+    </div>
+    <div class="row">
+      <div><label for="f_ativ">Atividade física (min)</label><input type="number" id="f_ativ" min="0" max="600" inputmode="numeric" placeholder="0"></div>
+      <div><label for="f_ativh">Terminou às</label><input type="time" id="f_ativh"></div>
+    </div>
+    <div class="row">
+      <div><label for="f_coch">Cochilo durante o dia (min)</label><input type="number" id="f_coch" min="0" max="600" inputmode="numeric" placeholder="0"></div>
+      <div><label for="f_tela">Usou celular/tela na última hora antes de dormir?</label>
+        <select id="f_tela"><option value="">—</option><option>Não</option><option>Um pouco</option><option>A hora toda</option></select></div>
+    </div>
+    <label for="f_obs">Quer contar algo? (opcional)</label>
+    <textarea id="f_obs" placeholder="Ex.: prova hoje, briga, sonho que se repetiu, dor..."></textarea>
+  </div>
+
+  <button class="btn" id="b_salvar">Salvar esta noite</button>
+  <div style="height:20px"></div>
+</section>
+
+<!-- ============ HISTÓRICO ============ -->
+<section id="t_historico" class="tab">
+  <div class="card">
+    <h2>Resumo</h2>
+    <div id="resumo">Nenhuma noite registrada ainda.</div>
+  </div>
+  <div class="card">
+    <h2>Exportar</h2>
+    <p style="margin:0;font-size:.9rem">Envia todas as noites para o seu pai, que leva ao psiquiatra. O ideal é registrar de 7 a 10 noites seguidas e depois exportar.</p>
+    <button class="btn ok" id="b_share">📤 Exportar e enviar (WhatsApp etc.)</button>
+    <button class="btn sec" id="b_copy">Copiar como texto</button>
+    <button class="btn sec" id="b_json">Baixar arquivo (.json)</button>
+  </div>
+  <div class="card">
+    <h2>Noites registradas</h2>
+    <div id="lista"></div>
+    <button class="btn danger" id="b_limpar">Apagar tudo deste celular</button>
+  </div>
+</section>
+
+<!-- ============ DICAS (estático: aparece mesmo sem JS) ============ -->
+<section id="t_dicas" class="tab on">
+  <div class="card">
+    <h2>😴 Sono</h2>
+    <ul>
+      <li><b>Quanto dormir:</b> na sua idade o recomendado é de 8 a 10 horas por noite (Academia Americana de Medicina do Sono).</li>
+      <li><b>Mesmo horário todo dia</b>, inclusive no fim de semana. Diferença de até 1 hora. Dormir até meio-dia no sábado bagunça o relógio da semana inteira.</li>
+      <li><b>Luz de manhã:</b> 10 a 20 minutos de luz natural logo depois de acordar (janela aberta, varanda, caminho da escola). É o que mais ajusta o relógio biológico.</li>
+      <li><b>Luz baixa à noite:</b> 1 hora antes de dormir, diminua as luzes da casa e do celular (modo noturno, brilho baixo).</li>
+      <li><b>Celular fora da cama.</b> Se puder, carregue fora do quarto. A cama é para dormir.</li>
+      <li><b>Cafeína só até umas 14h:</b> café, chá preto, chá mate, refri de cola, energético e chocolate amargo. Ela dura de 5 a 6 horas no corpo.</li>
+      <li><b>Quarto escuro, silencioso e fresco.</b> Máscara de olhos e ventilador ajudam.</li>
+      <li><b>Não conseguiu dormir em uns 20 min?</b> Levante, vá para um lugar com luz fraca, faça algo calmo (ler papel, desenhar) e volte quando o sono vier. Ficar brigando com o sono na cama piora.</li>
+      <li><b>Cochilo:</b> se precisar, no máximo 20 a 30 minutos e antes das 16h.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🧠 "Cérebro ligado" e pesadelos</h2>
+    <ul>
+      <li><b>Descarregue a cabeça antes de deitar:</b> uns 30 minutos antes, escreva num papel o que está na cabeça e o que precisa fazer amanhã. Assim o cérebro não precisa "segurar" isso.</li>
+      <li><b>Respiração 4-6:</b> inspire em 4 segundos, solte em 6. Repita por 5 minutos deitada. Soltar o ar devagar acalma o corpo.</li>
+      <li><b>Relaxamento muscular:</b> aperte uma parte do corpo por 5 segundos e solte por 10. Comece pelos pés e vá subindo até o rosto.</li>
+      <li><b>Pesadelo que se repete:</b> de dia, escreva o sonho e mude o final para um que você escolher. Depois leia a versão nova por alguns minutos. Isso tem nome: ensaio de imagens, e é um tratamento estudado para pesadelos. Vale fazer junto com o seu médico ou terapeuta.</li>
+      <li><b>Acordou de um pesadelo:</b> acenda uma luz fraca, beba água, olhe para coisas do quarto e diga para si mesma onde está e que dia é. Só volte a deitar quando o coração acalmar.</li>
+      <li><b>Evite no fim da noite:</b> série ou jogo tenso, notícia pesada e discussão no celular.</li>
+      <li><b>Remédios:</b> sonhos diferentes e sono mais leve podem ter a ver com remédio. Por isso este diário existe. Nunca mude, pule ou pare remédio por conta própria; conte ao médico e deixe ele ajustar.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🛋️ Descanso</h2>
+    <ul>
+      <li><b>Descanso não é só dormir:</b> pausas curtas de tela, ar livre, música, conversar com alguém de quem você gosta e não fazer nada por alguns minutos também contam.</li>
+      <li><b>Pausa de estudo:</b> a cada 45 a 50 minutos, pare 5 a 10. Levante, beba água, olhe longe.</li>
+      <li><b>Comer bem ajuda o sono:</b> café da manhã, não pular refeição e jantar leve 2 a 3 horas antes de deitar.</li>
+      <li><b>Água durante o dia,</b> menos perto da hora de dormir, para não acordar para ir ao banheiro.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🏃‍♀️ Atividade física</h2>
+    <ul>
+      <li><b>Meta:</b> uma média de 60 minutos por dia de atividade moderada ou intensa, e pelo menos 3 vezes por semana algo que fortaleça músculos e ossos (OMS, 2020).</li>
+      <li><b>Vale tudo que mexe o corpo:</b> caminhada rápida, bicicleta, dança, natação, vôlei, academia.</li>
+      <li><b>Melhor horário para dormir bem:</b> manhã ou tarde, de preferência ao ar livre (luz + movimento).</li>
+      <li><b>Treino forte à noite:</b> termine pelo menos 2 horas antes de deitar. À noite, prefira alongamento, yoga leve ou caminhada.</li>
+      <li><b>Mexer o corpo melhora o humor e a ansiedade,</b> além do sono. Começar com 10 a 15 minutos já conta.</li>
+    </ul>
+  </div>
+
+  <div class="card alert">
+    <h2 style="margin-top:0">💜 Quando pedir ajuda na hora</h2>
+    <p style="margin:0">Se você tiver pensamentos de se machucar ou de morrer, ficar muito agitada sem conseguir parar, ou sentir que está muito pior, fale com seu pai ou com seu médico <b>no mesmo dia</b>. A qualquer hora, você também pode ligar para o <b>CVV: 188</b> (grátis, 24h) ou falar pelo chat em cvv.org.br.</p>
+  </div>
+</section>
+
+</main>
+<footer>LK · dados guardados só neste aparelho até você exportar</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+var KEY='lk_sono_v1';
+var SCALES=[
+ ['s_pesint','Pesadelos: quão ruins foram?','nenhum','horríveis'],
+ ['s_cerebro','"Cérebro ligado" durante a noite','calmo','a mil'],
+ ['s_cans','Cansaço ao acordar','descansada','exausta'],
+ ['s_sonol','Sono durante o dia','alerta','caindo de sono'],
+ ['s_humor','Humor de ontem','muito mal','muito bem']
+];
+var FIELDS=['data','rem','deitou','luz','lat','desp','waso','acordou','levantou','pes','caf','cafh','ativ','ativh','coch','tela','obs'];
+var CHECKS=['pernas','dentes','suor','menst'];
+function $(id){return document.getElementById(id)}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{v:1,noites:{}}}catch(e){return {v:1,noites:{}}}}
+function save(db){localStorage.setItem(KEY,JSON.stringify(db))}
+function toast(t){var e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(e._t);e._t=setTimeout(function(){e.style.display='none'},2200)}
+
+// noite: horário relativo ao meio-dia (horas antes do meio-dia contam como dia seguinte)
+function nm(t){if(!t)return null;var p=t.split(':');var m=(+p[0])*60+(+p[1]);if(m<720)m+=1440;return m}
+function num(v){return v===''||v==null?null:+v}
+function hm(min){if(min==null||isNaN(min))return '—';var h=Math.floor(min/60),m=Math.round(min%60);if(m==60){h++;m=0}return h+'h'+(m<10?'0':'')+m}
+function calc(n){
+  var luz=nm(n.luz),aco=nm(n.acordou),dei=nm(n.deitou),lev=nm(n.levantou);
+  var r={};
+  if(dei!=null&&lev!=null&&lev>dei) r.cama=lev-dei;
+  if(luz!=null&&aco!=null&&aco>luz){r.sono=Math.max(0,aco-luz-(num(n.lat)||0)-(num(n.waso)||0))}
+  if(r.sono!=null&&r.cama) r.efic=Math.round(100*r.sono/r.cama);
+  return r;
+}
+
+// escalas
+var sc=$('scales');
+SCALES.forEach(function(s){
+  var d=document.createElement('div');
+  d.innerHTML='<label for="'+s[0]+'">'+s[1]+'</label><div class="scale"><input type="range" min="0" max="10" step="1" value="0" id="'+s[0]+'"><output id="o_'+s[0]+'">–</output></div><div class="hint"><span>0 '+s[2]+'</span><span>10 '+s[3]+'</span></div>';
+  sc.appendChild(d);
+  var i=d.querySelector('input');i.dataset.set='0';
+  i.addEventListener('input',function(){i.dataset.set='1';$('o_'+s[0]).textContent=i.value});
+});
+
+function defaultDate(){var d=new Date();if(d.getHours()<18)d.setDate(d.getDate()-1);return d.toISOString?new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10):''}
+function readForm(){
+  var n={};
+  FIELDS.forEach(function(f){n[f]=$('f_'+f).value});
+  SCALES.forEach(function(s){var i=$(s[0]);n[s[0].slice(2)]=i.dataset.set==='1'?+i.value:null});
+  CHECKS.forEach(function(c){n[c]=$('c_'+c).checked});
+  n.salvo=new Date().toISOString();
+  return n;
+}
+function fillForm(n){
+  FIELDS.forEach(function(f){$('f_'+f).value=n&&n[f]!=null?n[f]:''});
+  SCALES.forEach(function(s){var i=$(s[0]),v=n?n[s[0].slice(2)]:null;i.value=v==null?0:v;i.dataset.set=v==null?'0':'1';$('o_'+s[0]).textContent=v==null?'–':v});
+  CHECKS.forEach(function(c){$('c_'+c).checked=!!(n&&n[c])});
+  if(!$('f_data').value)$('f_data').value=defaultDate();
+  showCalc();
+}
+function showCalc(){
+  var r=calc(readForm());
+  $('calc').textContent=r.sono!=null?('Sono estimado: '+hm(r.sono)+(r.cama?' · Tempo na cama: '+hm(r.cama):'')+(r.efic!=null?' · Eficiência: '+r.efic+'%':'')):'Preencha os horários para ver o sono estimado.';
+}
+['luz','acordou','deitou','levantou','lat','waso'].forEach(function(f){$('f_'+f).addEventListener('input',showCalc)});
+
+$('b_salvar').onclick=function(){
+  var n=readForm();
+  if(!n.data){toast('Escolha a data da noite');return}
+  if(!n.luz||!n.acordou){toast('Preencha pelo menos "apagou a luz" e "acordou"');return}
+  var db=load();var existia=!!db.noites[n.data];db.noites[n.data]=n;save(db);
+  toast(existia?'Noite atualizada ✓':'Noite salva ✓');
+  fillForm(null);$('f_data').value=defaultDate();
+  render();go('historico');
+};
+
+function fmtD(d){var p=d.split('-');return p[2]+'/'+p[1]}
+function avg(a){a=a.filter(function(x){return x!=null&&!isNaN(x)});return a.length?a.reduce(function(s,x){return s+x},0)/a.length:null}
+function f1(x){return x==null?'—':(Math.round(x*10)/10).toString().replace('.',',')}
+function sorted(){var db=load();return Object.keys(db.noites).sort().map(function(k){return db.noites[k]})}
+
+function render(){
+  var L=sorted();
+  if(!L.length){$('resumo').textContent='Nenhuma noite registrada ainda.';$('lista').innerHTML='';return}
+  var C=L.map(calc);
+  var k=[
+   [hm(avg(C.map(function(c){return c.sono}))),'sono médio'],
+   [f1(avg(C.map(function(c){return c.efic})))+'%','eficiência média'],
+   [f1(avg(L.map(function(n){return num(n.pes)}))),'pesadelos/noite'],
+   [f1(avg(L.map(function(n){return n.cerebro}))),'cérebro ligado (0–10)'],
+   [f1(avg(L.map(function(n){return n.cans}))),'cansaço ao acordar'],
+   [L.length,'noites registradas']
+  ];
+  $('resumo').innerHTML='<div class="grid">'+k.map(function(x){return '<div class="kpi"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>'}).join('')+'</div><p class="calc">De '+fmtD(L[0].data)+' a '+fmtD(L[L.length-1].data)+'. Sono estimado = da luz apagada até acordar, menos o tempo para dormir e o tempo acordada.</p>';
+  var h='';
+  L.slice().reverse().forEach(function(n){
+    var c=calc(n);
+    h+='<div class="entry"><div class="top"><span>Noite de '+fmtD(n.data)+'</span><span>'+hm(c.sono)+'</span></div>'+
+      '<div>Pesadelos: '+(n.pes||0)+' · Cérebro: '+(n.cerebro==null?'–':n.cerebro)+' · Cansaço: '+(n.cans==null?'–':n.cans)+' · Acordou '+(n.desp||0)+'x</div>'+
+      '<div class="acts"><button data-e="'+n.data+'">Editar</button><button data-x="'+n.data+'">Apagar</button></div></div>';
+  });
+  $('lista').innerHTML=h;
+}
+$('lista').addEventListener('click',function(e){
+  var t=e.target,db=load();
+  if(t.dataset.e){fillForm(db.noites[t.dataset.e]);go('diario');window.scrollTo(0,0)}
+  if(t.dataset.x&&confirm('Apagar a noite de '+fmtD(t.dataset.x)+'?')){delete db.noites[t.dataset.x];save(db);render()}
+});
+$('b_limpar').onclick=function(){if(confirm('Apagar TODAS as noites deste celular? Exporte antes se ainda não enviou.')){localStorage.removeItem(KEY);render();toast('Apagado')}};
+
+function texto(){
+  var L=sorted();if(!L.length)return '';
+  var s='DIÁRIO DE SONO · LK\n'+fmtD(L[0].data)+' a '+fmtD(L[L.length-1].data)+' · '+L.length+' noites\n';
+  var C=L.map(calc);
+  s+='Médias: sono '+hm(avg(C.map(function(c){return c.sono})))+' · eficiência '+f1(avg(C.map(function(c){return c.efic})))+'% · pesadelos '+f1(avg(L.map(function(n){return num(n.pes)})))+'/noite · cérebro ligado '+f1(avg(L.map(function(n){return n.cerebro})))+' · cansaço '+f1(avg(L.map(function(n){return n.cans})))+'\n\n';
+  L.forEach(function(n,i){
+    var c=C[i],marc=CHECKS.filter(function(k){return n[k]}).join(', ');
+    s+='• Noite de '+fmtD(n.data)+': remédio '+(n.rem||'–')+' · deitou '+(n.deitou||'–')+' · luz '+(n.luz||'–')+' · demorou '+(n.lat||'–')+' min · acordou '+(n.desp||0)+'x ('+(n.waso||0)+' min) · de pé '+(n.acordou||'–')+'/'+(n.levantou||'–')+' · sono '+hm(c.sono)+(c.efic!=null?' ('+c.efic+'%)':'')+
+      '\n  pesadelos '+(n.pes||0)+' (intens. '+(n.pesint==null?'–':n.pesint)+') · cérebro '+(n.cerebro==null?'–':n.cerebro)+' · cansaço '+(n.cans==null?'–':n.cans)+' · sono de dia '+(n.sonol==null?'–':n.sonol)+' · humor '+(n.humor==null?'–':n.humor)+
+      '\n  cafeína '+(n.caf||0)+(n.cafh?' (últ. '+n.cafh+')':'')+' · ativ. '+(n.ativ||0)+' min'+(n.ativh?' (até '+n.ativh+')':'')+' · cochilo '+(n.coch||0)+' min · tela '+(n.tela||'–')+(marc?' · '+marc:'')+(n.obs?'\n  obs: '+n.obs.replace(/\n/g,' '):'')+'\n';
+  });
+  return s;
+}
+function jsonStr(){var db=load();db.exportado=new Date().toISOString();return JSON.stringify(db,null,1)}
+function copiar(t){
+  if(navigator.clipboard&&window.isSecureContext){return navigator.clipboard.writeText(t).then(function(){toast('Copiado ✓ Cole no WhatsApp')},function(){fallback(t)})}
+  fallback(t);
+}
+function fallback(t){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast('Copiado ✓')}catch(e){toast('Não deu para copiar')}a.remove()}
+$('b_copy').onclick=function(){var t=texto();if(!t){toast('Nada para exportar');return}copiar(t)};
+$('b_share').onclick=function(){
+  var t=texto();if(!t){toast('Nada para exportar');return}
+  t+='\n--- dados completos ---\n'+jsonStr();
+  if(navigator.share){navigator.share({title:'Diário de sono LK',text:t}).catch(function(){})}else{copiar(t)}
+};
+$('b_json').onclick=function(){
+  if(!sorted().length){toast('Nada para exportar');return}
+  var b=new Blob([jsonStr()],{type:'application/json'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download='LK_sono_'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();
+};
+
+function go(t){
+  document.querySelectorAll('.tab').forEach(function(s){s.classList.toggle('on',s.id==='t_'+t)});
+  document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.t===t)});
+}
+document.querySelectorAll('nav button').forEach(function(b){b.onclick=function(){go(b.dataset.t);window.scrollTo(0,0)}});
+$('nav').style.display='flex';
+fillForm(null);render();go('diario');
+})();
+</script>
+</body>
+</html>
